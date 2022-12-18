@@ -39,23 +39,25 @@ public class ProductserviceController {
       productRepo.put(almond.getId(), almond);
      
    }
-   
+   //menghapus produk
    @RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
    public ResponseEntity<Object> delete(@PathVariable("id") String id, @RequestBody Product product) { 
       productRepo.remove(id);
-      return new ResponseEntity<>("Product is deleted successsfully", HttpStatus.OK);
+      return new ResponseEntity<>("Produk Terhapus", HttpStatus.OK);
    }
-   
+   //mengupdate data
    @RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
    public ResponseEntity<Object> updateProduct(@PathVariable("id") String id, @RequestBody Product product) { 
+       //Tampilan produk yg akan di update tidak ditemukan 
       if(!productRepo.containsKey(id)){
-            return new ResponseEntity<>("Product id not found, please check again", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Produk Tidak Ada", HttpStatus.NOT_FOUND);
         }
         else{
+          //Tampilan produk apabila berhasil terupdate
             productRepo.remove(id);
             product.setId(id);
             productRepo.put(id, product);
-            return new  ResponseEntity<>("Product is updated Successfully",HttpStatus.OK);
+            return new  ResponseEntity<>("Success Update Data",HttpStatus.OK);
         }
 
     }
@@ -63,14 +65,17 @@ public class ProductserviceController {
    @RequestMapping(value = "/products", method = RequestMethod.POST)
    public ResponseEntity<Object> createProduct(@RequestBody Product product) {
      if(productRepo.containsKey(product.getId())){
-            return new ResponseEntity<>("Product id cannot be the same, please check again", HttpStatus.OK);
+         //Tampilan apabila id produk yg di tambahkan sudah ada 
+            return new ResponseEntity<>("ID Produk tidak boleh sama", HttpStatus.OK);
         }
         else{
+         //Tampilan berhasil menambahkan produk
             productRepo.put(product.getId(), product);
-            return new ResponseEntity<>("Product is created Successfully", HttpStatus.CREATED);
+            return new ResponseEntity<>("Produk Berhasil di Tambahkan", HttpStatus.CREATED);
         }
     }
    
+   //menampilan produk
    @RequestMapping(value = "/products")
    public ResponseEntity<Object> getProduct() {
       return new ResponseEntity<>(productRepo.values(), HttpStatus.OK);
